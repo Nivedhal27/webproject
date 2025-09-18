@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn Tamil Proverbs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/proverbs.css">
+  <style>
+    body {
+      font-family: 'Fredoka One', cursive;
+      background: #fff8f0;
+      text-align: center;
+      padding: 20px;
+    }
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 5px;
+      color: #e63946;
+    }
+    header p {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      position: relative;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.03);
+    }
+    h2 {
+      font-size: 1.2rem;
+      color: #e63946;
+      margin-bottom: 10px;
+    }
+    .pronunciation {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .meaning {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .speak-btn {
+      background: #e63946;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .speak-btn:hover {
+      background: #b71c1c;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌟 Tamil Proverbs</h1>
+    <p>Learn Tamil the fun & colorful way!</p>
+  </header>
+
+  <main class="cards-container">
+    <div class="card">
+      <div class="bubble"></div>
+      <h2>அப்பாவைக் கேட்டு கற்றார்</h2>
+      <p class="pronunciation">Appaavaik Kaettu Katrar</p>
+      <p class="meaning">Advice from parents is valuable.</p>
+      <button class="speak-btn" onclick="speak('அப்பாவைக் கேட்டு கற்றார்')">🔊 Speak</button>
+    </div>
+
+    <div class="card">
+      <div class="bubble"></div>
+      <h2>கொஞ்சம் கொஞ்சம் கற்றுக் கொள்</h2>
+      <p class="pronunciation">Konjam Konjam Katruk Kol</p>
+      <p class="meaning">Learn little by little.</p>
+      <button class="speak-btn" onclick="speak('கொஞ்சம் கொஞ்சம் கற்றுக் கொள்')">🔊 Speak</button>
+    </div>
+
+    <div class="card">
+      <div class="bubble"></div>
+      <h2>தீயினால் தூரம் விலக்கும்</h2>
+      <p class="pronunciation">Theeyinaal Dooram Vilakkum</p>
+      <p class="meaning">Stay away from bad influences.</p>
+      <button class="speak-btn" onclick="speak('தீயினால் தூரம் விலக்கும்')">🔊 Speak</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>🎨 Made fun & colorful for Tamil learners</p>
+  </footer>
+
+  <script>
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'ta-IN'; // Tamil
+      window.speechSynthesis.speak(msg);
+    }
+  </script>
+</body>
+</html>

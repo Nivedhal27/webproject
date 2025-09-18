@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards - Tamil Colors</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f6d365, #fda085);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  h1 {
+    font-family: 'Press Start 2P', cursive;
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px #fff;
+  }
+
+  #flashcard {
+    background: #fff;
+    width: 300px;
+    height: 180px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    perspective: 1000px;
+    position: relative;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  #flashcard.flipped { transform: rotateY(180deg); }
+
+  .side {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    font-size: 1.5em;
+    font-weight: 600;
+  }
+
+  .front { background: #ffd700; color: #333; }
+  .back { background: #333; color: #fff; transform: rotateY(180deg); font-size: 1.2em; }
+
+  #controls {
+    margin-top: 30px;
+  }
+
+  button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #ff5722;
+    color: #fff;
+    transition: all 0.3s;
+  }
+
+  button:hover { background: #ff9800; transform: scale(1.05); }
+
+  #finishedMessage {
+    margin-top: 30px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    color: #4caf50;
+    text-shadow: 1px 1px 5px #fff;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<iframe src="player.html" 
+        style="position:fixed; top:0; right:0; width:80px; height:80px; border:none; background:transparent; z-index:9999;" 
+        scrolling="no">
+</iframe>
+
+<h1>🎨 Tamil Colors Flashcards</h1>
+
+<div id="flashcard">
+  <div class="side front" id="front">நீலம்</div>
+  <div class="side back" id="back">Neelam (Blue)</div>
+</div>
+
+<div id="controls">
+  <button onclick="prevCard()">⬅ Prev</button>
+  <button onclick="nextCard()">Next ➡</button>
+</div>
+
+<div id="finishedMessage">🎉 Congratulations! You've finished all flashcards! 🎉</div>
+
+<script>
+const flashcards = [
+  { tamil: "நீலம்", english: "Blue", pronunciation: "Neelam" },
+  { tamil: "சிவப்பு", english: "Red", pronunciation: "Sivappu" },
+  { tamil: "மஞ்சள்", english: "Yellow", pronunciation: "Manjal" },
+  { tamil: "பச்சை", english: "Green", pronunciation: "Pachchai" },
+  { tamil: "நீலம் மஞ்சள்", english: "Orange", pronunciation: "Neelam Manjal" },
+  { tamil: "வெள்ளை", english: "White", pronunciation: "Vellai" },
+  { tamil: "கருப்பு", english: "Black", pronunciation: "Karuppu" },
+  { tamil: "சாம்பல்", english: "Brown", pronunciation: "Saampal" },
+  { tamil: "மஞ்சை நீலம்", english: "Purple", pronunciation: "Manjai Neelam" }
+];
+
+let currentIndex = 0;
+const flashcard = document.getElementById('flashcard');
+const front = document.getElementById('front');
+const back = document.getElementById('back');
+const finishedMessage = document.getElementById('finishedMessage');
+
+function showCard(index) {
+  if(index >= flashcards.length) {
+    flashcard.style.display = 'none';
+    finishedMessage.style.display = 'block';
+    return;
+  }
+  finishedMessage.style.display = 'none';
+  flashcard.style.display = 'flex';
+  const card = flashcards[index];
+  front.innerText = card.tamil;
+  back.innerText = `${card.pronunciation} (${card.english})`;
+  flashcard.classList.remove('flipped');
+}
+
+flashcard.addEventListener('click', () => {
+  flashcard.classList.toggle('flipped');
+});
+
+function nextCard() {
+  currentIndex++;
+  showCard(currentIndex);
+}
+
+function prevCard() {
+  currentIndex = Math.max(0, currentIndex - 1);
+  showCard(currentIndex);
+}
+
+// Initialize first card
+showCard(currentIndex);
+</script>
+
+</body>
+</html>

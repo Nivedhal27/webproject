@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tamil Word Cookies - Night Sky</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    background: linear-gradient(to bottom, #0d1b2a, #1b263b, #3a506b);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background */
+.night-sky {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Moon */
+.moon {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle at 30% 30%, #fff 70%, #ddd 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(255,255,200,0.8);
+}
+
+/* Stars */
+.star {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkle 2s infinite alternate;
+}
+@keyframes twinkle {
+    from { opacity: 0.2; transform: scale(1); }
+    to { opacity: 1; transform: scale(1.3); }
+}
+
+/* Shooting star */
+.shooting-star {
+    position: absolute;
+    width: 2px; height: 80px;
+    background: linear-gradient(to bottom, white, transparent);
+    opacity: 0.7;
+    transform: rotate(45deg);
+    top: -100px;
+    left: -100px;
+    animation: shooting 8s ease-in-out infinite;
+}
+@keyframes shooting {
+    0% { transform: translate(0,0) rotate(45deg); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translate(120vw, 120vh) rotate(45deg); opacity: 0; }
+}
+
+/* Heading */
+h1 {
+    color: #ffd166;
+    text-shadow: 0 0 10px rgba(255,255,255,0.6);
+}
+
+/* Game container */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 90%;
+    max-width: 600px;
+    background: rgba(20,20,30,0.85);
+    padding: 30px;
+    border-radius: 16px;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+}
+
+.word-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255,255,255,0.08);
+    padding: 20px;
+    border-radius: 12px;
+    width: 100%;
+}
+
+.found-words-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px,1fr));
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.found-word {
+    background-color: #ffd166;
+    border: 2px solid #e09f3e;
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #3a1f04;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+}
+
+.letter-tray-container {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    margin-top: 20px;
+}
+
+.center-circle {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px; height: 120px;
+    background-color: #ffd166;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; font-weight: bold;
+    color: #3a1f04;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+}
+
+.letter-circle {
+    position: absolute;
+    width: 60px; height: 60px;
+    background-color: #ffe0b2;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4), inset 0 0 6px rgba(255,255,255,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.letter-circle:hover { transform: scale(1.1); box-shadow: 0 6px 12px rgba(0,0,0,0.5); }
+.letter-circle.active { background-color: #f9b26c; transform: scale(1.05); }
+
+#line-canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
+
+.level-indicator {
+    position: absolute;
+    top: 20px; right: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffd166;
+    z-index: 20;
+}
+
+.success-message {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(40, 167, 69, 0.9);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    z-index: 100;
+    text-align: center;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+}
+</style>
+</head>
+<body>
+
+<div class="night-sky">
+    <div class="moon"></div>
+    <div class="star" style="top:10%; left:20%;"></div>
+    <div class="star" style="top:30%; left:50%;"></div>
+    <div class="star" style="top:60%; left:70%;"></div>
+    <div class="star" style="top:40%; left:80%;"></div>
+    <div class="star" style="top:20%; left:65%;"></div>
+    <div class="star" style="top:75%; left:35%;"></div>
+    <div class="star" style="top:15%; left:85%;"></div>
+    <div class="shooting-star"></div>
+</div>
+
+<div class="level-indicator" id="level-indicator"></div>
+<h1>தமிழ் சொல் விளையாட்டு</h1>
+<p>Let's play a word game! Find all the words using the given letters.</p>
+
+<div class="game-container">
+    <div class="word-display">
+        <p>Found Words:</p>
+        <div class="found-words-grid" id="found-words-grid"></div>
+    </div>
+    <div class="letter-tray-container" id="letter-tray-container">
+        <canvas id="line-canvas"></canvas>
+        <div class="center-circle">🍪</div>
+    </div>
+</div>
+
+<div id="success-message" class="success-message"></div>
+
+<script>
+// Game levels
+const levels = [
+    { letters: ['அ','ன்','பு','ம'], words: ['அன்பு','மன்'] },
+    { letters: ['ம','மா','ழை','லை'], words: ['மழை','மாலை'] },
+    { letters: ['வ','லி','மை','ப'], words: ['வலி','மை','வலிமை','பலி'] },
+    { letters: ['ந','ன்','றி','ம்'], words: ['நன்றி','நன்'] },
+    { letters: ['ம','கி','ழ்','ச்சி','வ'], words: ['மகிழ்ச்சி','மகிழ்','மகி','வாழ்க்கை'] }
+];
+
+const letterTrayContainer = document.getElementById('letter-tray-container');
+const foundWordsGrid = document.getElementById('found-words-grid');
+const levelIndicator = document.getElementById('level-indicator');
+const successMessage = document.getElementById('success-message');
+const canvas = document.getElementById('line-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 300; canvas.height = 300;
+
+let dragging = false;
+let selectedLetters = [];
+let startPos = {x:0,y:0};
+let currentPos = {x:0,y:0};
+let foundWords = new Set();
+let currentLevelIndex = 0;
+
+// Shuffle function
+function shuffleArray(array){
+    for(let i=array.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [array[i],array[j]] = [array[j],array[i]];
+    }
+    return array;
+}
+
+// Load level
+function loadLevel(index){
+    if(index>=levels.length){
+        displaySuccessMessage("You have completed all levels!");
+        return;
+    }
+    currentLevelIndex = index;
+    foundWords.clear();
+    foundWordsGrid.innerHTML = '';
+    letterTrayContainer.querySelectorAll('.letter-circle').forEach(el=>el.remove());
+    levelIndicator.innerText = `Level ${currentLevelIndex+1}`;
+    const currentLetters = shuffleArray([...levels[currentLevelIndex].letters]);
+    const radius = 100, angleStep = (2*Math.PI)/currentLetters.length;
+    currentLetters.forEach((letter,idx)=>{
+        const angle = idx*angleStep;
+        const x = radius*Math.cos(angle)+150;
+        const y = radius*Math.sin(angle)+150;
+        const circle = document.createElement('div');
+        circle.classList.add('letter-circle');
+        circle.innerText = letter;
+        circle.style.left = `${x-30}px`;
+        circle.style.top = `${y-30}px`;
+        circle.dataset.letter = letter;
+        letterTrayContainer.appendChild(circle);
+    });
+}
+
+// Display message
+function displaySuccessMessage(message){
+    successMessage.innerText = message;
+    successMessage.style.opacity = 1;
+    setTimeout(()=>{ successMessage.style.opacity = 0; },2000);
+}
+
+// Draw connecting line
+function drawLine(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(selectedLetters.length>0){
+        for(let i=0;i<selectedLetters.length-1;i++){
+            const from = selectedLetters[i].getBoundingClientRect();
+            const to = selectedLetters[i+1].getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(from.left+from.width/2-letterTrayContainer.getBoundingClientRect().left,
+                       from.top+from.height/2-letterTrayContainer.getBoundingClientRect().top);
+            ctx.lineTo(to.left+to.width/2-letterTrayContainer.getBoundingClientRect().left,
+                       to.top+to.height/2-letterTrayContainer.getBoundingClientRect().top);
+            ctx.strokeStyle = '#ff7a00';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+        }
+    }
+}
+
+// Mouse events
+function handleMouseDown(event){
+    const target = event.target.closest('.letter-circle');
+    if(target){
+        dragging=true;
+        selectedLetters.push(target);
+        target.classList.add('active');
+    }
+}
+function handleMouseMove(event){
+    if(!dragging) return;
+    const target = event.target.closest('.letter-circle');
+    if(target && !selectedLetters.includes(target)){
+        selectedLetters.push(target);
+        target.classList.add('active');
+    }
+    drawLine();
+}
+function handleMouseUp(){
+    dragging=false;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const formedWord = selectedLetters.map(el=>el.dataset.letter).join('');
+    const currentWords = levels[currentLevelIndex].words;
+    if(currentWords.includes(formedWord) && !foundWords.has(formedWord)){
+        foundWords.add(formedWord);
+        const wordElement = document.createElement('div');
+        wordElement.classList.add('found-word');
+        wordElement.innerText = formedWord;
+        foundWordsGrid.appendChild(wordElement);
+        if(foundWords.size === currentWords.length){
+            displaySuccessMessage("Level Complete!");
+            setTimeout(()=>loadLevel(currentLevelIndex+1),2000);
+        }
+    }
+    selectedLetters.forEach(el=>el.classList.remove('active'));
+    selectedLetters=[];
+}
+
+document.addEventListener('mousedown',handleMouseDown);
+document.addEventListener('mousemove',handleMouseMove);
+document.addEventListener('mouseup',handleMouseUp);
+
+// Start game
+loadLevel(0);
+</script>
+
+</body>
+</html>

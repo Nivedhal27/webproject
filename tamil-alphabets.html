@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tamil Alphabet Learner - LingoRoots</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #fef6e4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #ff7a00;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            color: #2a7d74;
+            width: 100%;
+            max-width: 1000px;
+            text-align: left;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #2a7d74;
+            padding-bottom: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .inner-card {
+            width: 100%;
+            aspect-ratio: 1/1;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .card.flipped .inner-card {
+            transform: rotateY(180deg);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .front {
+            background-color: #ffd8a9;
+            color: #1a1a1a;
+        }
+
+        .back {
+            background-color: #ffc37d;
+            color: #000;
+            transform: rotateY(180deg);
+            font-size: 1.2rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .front, .back {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <iframe src="player.html" 
+        style="position:fixed; top:0; right:0; width:80px; height:80px; border:none; background:transparent; z-index:9999;" 
+        scrolling="no">
+</iframe>
+
+    <h1>🔤 Tamil Alphabets</h1>
+    <p style="margin-bottom: 2rem;">Click on a tile to flip and learn its English pronunciation!</p>
+
+    <h2>Vowels (உயிர் எழுத்துக்கள்)</h2>
+    <div class="grid" id="vowelsGrid"></div>
+
+    <h2>Consonants (மெய் எழுத்துக்கள்)</h2>
+    <div class="grid" id="consonantsGrid"></div>
+
+    <h2>Aytham (ஆய்த எழுத்து)</h2>
+    <div class="grid" id="aythamGrid"></div>
+
+    <h2>Vowel-Consonant Combinations (உயிர்மெய் எழுத்துக்கள்)</h2>
+    <div class="grid" id="uyirmeiGrid"></div>
+
+    <script>
+        
+        // Vowels (உயிர் எழுத்துக்கள்)
+        const vowels = [
+            { tamil: "அ", pronounce: "a" },
+            { tamil: "ஆ", pronounce: "aa" },
+            { tamil: "இ", pronounce: "i" },
+            { tamil: "ஈ", pronounce: "ee" },
+            { tamil: "உ", pronounce: "u" },
+            { tamil: "ஊ", pronounce: "oo" },
+            { tamil: "எ", pronounce: "e" },
+            { tamil: "ஏ", pronounce: "ae" },
+            { tamil: "ஐ", pronounce: "ai" },
+            { tamil: "ஒ", pronounce: "o" },
+            { tamil: "ஓ", pronounce: "oh" },
+            { tamil: "ஔ", pronounce: "au" }
+        ];
+
+        // Consonants (மெய் எழுத்துக்கள்)
+        const consonants = [
+            { tamil: "க்", pronounce: "k" },
+            { tamil: "ங்", pronounce: "ng" },
+            { tamil: "ச்", pronounce: "ch" },
+            { tamil: "ஞ்", pronounce: "nj" },
+            { tamil: "ட்", pronounce: "t (retroflex)" },
+            { tamil: "ண்", pronounce: "n (retroflex)" },
+            { tamil: "த்", pronounce: "th" },
+            { tamil: "ந்", pronounce: "n" },
+            { tamil: "ப்", pronounce: "p" },
+            { tamil: "ம்", pronounce: "m" },
+            { tamil: "ய்", pronounce: "y" },
+            { tamil: "ர்", pronounce: "r" },
+            { tamil: "ல்", pronounce: "l" },
+            { tamil: "வ்", pronounce: "v" },
+            { tamil: "ழ்", pronounce: "zh (unique)" },
+            { tamil: "ள்", pronounce: "l (retroflex)" },
+            { tamil: "ற்", pronounce: "tr / ṟ" },
+            { tamil: "ன்", pronounce: "n (dental)" }
+        ];
+
+        // Vowel-Consonant Combinations (உயிர்மெய் எழுத்துக்கள்)
+        const uyirmei = [
+            // 'க' series
+            { tamil: "க", pronounce: "ka" }, { tamil: "கா", pronounce: "kaa" }, { tamil: "கி", pronounce: "ki" },
+            { tamil: "கீ", pronounce: "kii" }, { tamil: "கு", pronounce: "ku" }, { tamil: "கூ", pronounce: "koo" },
+            { tamil: "கெ", pronounce: "ke" }, { tamil: "கே", pronounce: "kae" }, { tamil: "கை", pronounce: "kai" },
+            { tamil: "கொ", pronounce: "ko" }, { tamil: "கோ", pronounce: "koh" }, { tamil: "கௌ", pronounce: "kau" },
+            // 'ங' series
+            { tamil: "ங", pronounce: "nga" }, { tamil: "ஙா", pronounce: "ngaa" }, { tamil: "ஙி", pronounce: "ngi" },
+            { tamil: "ஙீ", pronounce: "ngee" }, { tamil: "ஙு", pronounce: "ngu" }, { tamil: "ஙூ", pronounce: "nguu" },
+            { tamil: "ஙெ", pronounce: "nge" }, { tamil: "ஙே", pronounce: "ngae" }, { tamil: "ஙை", pronounce: "ngai" },
+            { tamil: "ஙொ", pronounce: "ngo" }, { tamil: "ஙோ", pronounce: "ng-oh" }, { tamil: "ஙௌ", pronounce: "ngau" },
+            // 'ச' series
+            { tamil: "ச", pronounce: "sa" }, { tamil: "சா", pronounce: "saa" }, { tamil: "சி", pronounce: "si" },
+            { tamil: "சீ", pronounce: "see" }, { tamil: "சு", pronounce: "su" }, { tamil: "சூ", pronounce: "soo" },
+            { tamil: "செ", pronounce: "se" }, { tamil: "சே", pronounce: "sae" }, { tamil: "சை", pronounce: "sai" },
+            { tamil: "சொ", pronounce: "so" }, { tamil: "சோ", pronounce: "soh" }, { tamil: "சௌ", pronounce: "sau" },
+            // 'ஞ' series
+            { tamil: "ஞ", pronounce: "nja" }, { tamil: "ஞா", pronounce: "njaa" }, { tamil: "ஞி", pronounce: "nji" },
+            { tamil: "ஞீ", pronounce: "njee" }, { tamil: "ஞு", pronounce: "nju" }, { tamil: "ஞூ", pronounce: "njuu" },
+            { tamil: "ஞெ", pronounce: "nje" }, { tamil: "ஞே", pronounce: "njae" }, { tamil: "ஞை", pronounce: "njai" },
+            { tamil: "ஞொ", pronounce: "njo" }, { tamil: "ஞோ", pronounce: "njoh" }, { tamil: "ஞௌ", pronounce: "njau" },
+            // 'ட' series
+            { tamil: "ட", pronounce: "ta" }, { tamil: "டா", pronounce: "taa" }, { tamil: "டி", pronounce: "ti" },
+            { tamil: "டீ", pronounce: "tee" }, { tamil: "டு", pronounce: "tu" }, { tamil: "டூ", pronounce: "too" },
+            { tamil: "டெ", pronounce: "te" }, { tamil: "டே", pronounce: "tae" }, { tamil: "டை", pronounce: "tai" },
+            { tamil: "டொ", pronounce: "to" }, { tamil: "டோ", pronounce: "toh" }, { tamil: "டௌ", pronounce: "tau" },
+            // 'ண' series
+            { tamil: "ண", pronounce: "na (retroflex)" }, { tamil: "ணா", pronounce: "naa (retroflex)" }, { tamil: "ணி", pronounce: "ni (retroflex)" },
+            { tamil: "ணீ", pronounce: "nee (retroflex)" }, { tamil: "ணு", pronounce: "nu (retroflex)" }, { tamil: "ணூ", pronounce: "noo (retroflex)" },
+            { tamil: "ணெ", pronounce: "ne (retroflex)" }, { tamil: "ணே", pronounce: "nae (retroflex)" }, { tamil: "ணை", pronounce: "nai (retroflex)" },
+            { tamil: "ணொ", pronounce: "no (retroflex)" }, { tamil: "ணோ", pronounce: "noh (retroflex)" }, { tamil: "ணௌ", pronounce: "nau (retroflex)" },
+            // 'த' series
+            { tamil: "த", pronounce: "tha" }, { tamil: "தா", pronounce: "thaa" }, { tamil: "தி", pronounce: "thi" },
+            { tamil: "தீ", pronounce: "thee" }, { tamil: "து", pronounce: "thu" }, { tamil: "தூ", pronounce: "thoo" },
+            { tamil: "தெ", pronounce: "the" }, { tamil: "தே", pronounce: "thae" }, { tamil: "தை", pronounce: "thai" },
+            { tamil: "தொ", pronounce: "tho" }, { tamil: "தோ", pronounce: "thoh" }, { tamil: "தௌ", pronounce: "thau" },
+            // 'ந' series
+            { tamil: "ந", pronounce: "na" }, { tamil: "நா", pronounce: "naa" }, { tamil: "நி", pronounce: "ni" },
+            { tamil: "நீ", pronounce: "nee" }, { tamil: "நு", pronounce: "nu" }, { tamil: "நூ", pronounce: "noo" },
+            { tamil: "நெ", pronounce: "ne" }, { tamil: "நே", pronounce: "nae" }, { tamil: "நை", pronounce: "nai" },
+            { tamil: "நொ", pronounce: "no" }, { tamil: "நோ", pronounce: "noh" }, { tamil: "நௌ", pronounce: "nau" },
+            // 'ப' series
+            { tamil: "ப", pronounce: "pa" }, { tamil: "பா", pronounce: "paa" }, { tamil: "பி", pronounce: "pi" },
+            { tamil: "பீ", pronounce: "pee" }, { tamil: "பு", pronounce: "pu" }, { tamil: "பூ", pronounce: "poo" },
+            { tamil: "பெ", pronounce: "pe" }, { tamil: "பே", pronounce: "pae" }, { tamil: "பை", pronounce: "pai" },
+            { tamil: "பொ", pronounce: "po" }, { tamil: "போ", pronounce: "poh" }, { tamil: "பௌ", pronounce: "pau" },
+            // 'ம' series
+            { tamil: "ம", pronounce: "ma" }, { tamil: "மா", pronounce: "maa" }, { tamil: "மி", pronounce: "mi" },
+            { tamil: "மீ", pronounce: "mee" }, { tamil: "மு", pronounce: "mu" }, { tamil: "மூ", pronounce: "moo" },
+            { tamil: "மெ", pronounce: "me" }, { tamil: "மே", pronounce: "mae" }, { tamil: "மை", pronounce: "mai" },
+            { tamil: "மொ", pronounce: "mo" }, { tamil: "மோ", pronounce: "moh" }, { tamil: "மௌ", pronounce: "mau" },
+            // 'ய' series
+            { tamil: "ய", pronounce: "ya" }, { tamil: "யா", pronounce: "yaa" }, { tamil: "யி", pronounce: "yi" },
+            { tamil: "யீ", pronounce: "yee" }, { tamil: "யு", pronounce: "yu" }, { tamil: "யூ", pronounce: "yoo" },
+            { tamil: "யெ", pronounce: "ye" }, { tamil: "யே", pronounce: "yae" }, { tamil: "யை", pronounce: "yai" },
+            { tamil: "யொ", pronounce: "yo" }, { tamil: "யோ", pronounce: "yoh" }, { tamil: "யௌ", pronounce: "yau" },
+            // 'ர' series
+            { tamil: "ர", pronounce: "ra" }, { tamil: "ரா", pronounce: "raa" }, { tamil: "ரி", pronounce: "ri" },
+            { tamil: "ரீ", pronounce: "ree" }, { tamil: "ரு", pronounce: "ru" }, { tamil: "ரூ", pronounce: "roo" },
+            { tamil: "ரெ", pronounce: "re" }, { tamil: "ரே", pronounce: "rae" }, { tamil: "ரை", pronounce: "rai" },
+            { tamil: "ரொ", pronounce: "ro" }, { tamil: "ரோ", pronounce: "roh" }, { tamil: "ரௌ", pronounce: "rau" },
+            // 'ல' series
+            { tamil: "ல", pronounce: "la" }, { tamil: "லா", pronounce: "laa" }, { tamil: "லி", pronounce: "li" },
+            { tamil: "லீ", pronounce: "lee" }, { tamil: "லு", pronounce: "lu" }, { tamil: "லூ", pronounce: "loo" },
+            { tamil: "லெ", pronounce: "le" }, { tamil: "லே", pronounce: "lae" }, { tamil: "லை", pronounce: "lai" },
+            { tamil: "லொ", pronounce: "lo" }, { tamil: "லோ", pronounce: "loh" }, { tamil: "லௌ", pronounce: "lau" },
+            // 'வ' series
+            { tamil: "வ", pronounce: "va" }, { tamil: "வா", pronounce: "vaa" }, { tamil: "வி", pronounce: "vi" },
+            { tamil: "வீ", pronounce: "vee" }, { tamil: "வு", pronounce: "vu" }, { tamil: "வூ", pronounce: "voo" },
+            { tamil: "வெ", pronounce: "ve" }, { tamil: "வே", pronounce: "vae" }, { tamil: "வை", pronounce: "vai" },
+            { tamil: "வொ", pronounce: "vo" }, { tamil: "வோ", pronounce: "voh" }, { tamil: "வௌ", pronounce: "vau" },
+            // 'ழ' series
+            { tamil: "ழ", pronounce: "zha" }, { tamil: "ழா", pronounce: "zhaa" }, { tamil: "ழி", pronounce: "zhi" },
+            { tamil: "ழீ", pronounce: "zhee" }, { tamil: "ழு", pronounce: "zhu" }, { tamil: "ழூ", pronounce: "zhoo" },
+            { tamil: "ழெ", pronounce: "zhe" }, { tamil: "ழே", pronounce: "zhae" }, { tamil: "ழை", pronounce: "zhai" },
+            { tamil: "ழொ", pronounce: "zho" }, { tamil: "ழோ", pronounce: "zhoh" }, { tamil: "ழௌ", pronounce: "zhau" },
+            // 'ள' series
+            { tamil: "ள", pronounce: "la (retroflex)" }, { tamil: "ளா", pronounce: "laa (retroflex)" }, { tamil: "ளி", pronounce: "li (retroflex)" },
+            { tamil: "ளீ", pronounce: "lee (retroflex)" }, { tamil: "ளு", pronounce: "lu (retroflex)" }, { tamil: "ளூ", pronounce: "loo (retroflex)" },
+            { tamil: "ளெ", pronounce: "le (retroflex)" }, { tamil: "ளே", pronounce: "lae (retroflex)" }, { tamil: "ளை", pronounce: "lai (retroflex)" },
+            { tamil: "ளொ", pronounce: "lo (retroflex)" }, { tamil: "ளோ", pronounce: "loh (retroflex)" }, { tamil: "ளௌ", pronounce: "lau (retroflex)" },
+            // 'ற' series
+            { tamil: "ற", pronounce: "ra (hard 'r')" }, { tamil: "றா", pronounce: "raa (hard 'r')" }, { tamil: "றி", pronounce: "ri (hard 'r')" },
+            { tamil: "றீ", pronounce: "ree (hard 'r')" }, { tamil: "று", pronounce: "ru (hard 'r')" }, { tamil: "றூ", pronounce: "roo (hard 'r')" },
+            { tamil: "றெ", pronounce: "re (hard 'r')" }, { tamil: "றே", pronounce: "rae (hard 'r')" }, { tamil: "றை", pronounce: "rai (hard 'r')" },
+            { tamil: "றொ", pronounce: "ro (hard 'r')" }, { tamil: "றோ", pronounce: "roh (hard 'r')" }, { tamil: "றௌ", pronounce: "rau (hard 'r')" },
+            // 'ன' series
+            { tamil: "ன", pronounce: "na (dental)" }, { tamil: "னா", pronounce: "naa (dental)" }, { tamil: "னி", pronounce: "ni (dental)" },
+            { tamil: "னீ", pronounce: "nee (dental)" }, { tamil: "னு", pronounce: "nu (dental)" }, { tamil: "னூ", pronounce: "noo (dental)" },
+            { tamil: "னெ", pronounce: "ne (dental)" }, { tamil: "னே", pronounce: "nae (dental)" }, { tamil: "னை", pronounce: "nai (dental)" },
+            { tamil: "னொ", pronounce: "no (dental)" }, { tamil: "னோ", pronounce: "noh (dental)" }, { tamil: "னௌ", pronounce: "nau (dental)" }
+        ];
+
+        // Aytham (ஆய்த எழுத்து)
+        const aytham = [
+            { tamil: "ஃ", pronounce: "akh" }
+        ];
+
+        // Function to create and append cards to a specific grid
+        // Function to speak Tamil text
+function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "ta-IN"; // Tamil
+    window.speechSynthesis.speak(msg);
+}
+
+// Function to create and append cards to a specific grid
+function createCards(letters, gridId) {
+    const grid = document.getElementById(gridId);
+    letters.forEach((letter) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="inner-card">
+                <div class="front">${letter.tamil}</div>
+                <div class="back">${letter.pronounce}</div>
+            </div>
+        `;
+        // Flip card and speak Tamil letter when clicked
+        card.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+            speak(letter.tamil); // speak Tamil text
+        });
+        grid.appendChild(card);
+    });
+}
+
+// Call the function for each category
+createCards(vowels, "vowelsGrid");
+createCards(consonants, "consonantsGrid");
+createCards(uyirmei, "uyirmeiGrid");
+createCards(aytham, "aythamGrid");
+
+
+        // Call the function for each categor
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Learn Tamil - LingoRoots</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow-y: auto; /* Scrollable */
+    background: linear-gradient(180deg, #fbc2eb, #a6c1ee, #a1c4fd);
+    position: relative;
+  }
+
+  /* Floating Tamil letters */
+  .floating-letter {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.15;
+    animation: float 25s linear infinite;
+    color: #008080;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(100vh) translateX(0) rotate(0deg); }
+    100% { transform: translateY(-10vh) translateX(50px) rotate(360deg); }
+  }
+
+  h1 {
+    color: #008080;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 8px #fff;
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    color: #004d4d;
+    font-weight: 500;
+  }
+
+  .card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 900px;
+    margin: auto;
+    z-index: 1;
+    position: relative;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 260px;
+    color: #333;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid transparent;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: scale(1.08) rotate(1deg);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    border: 3px solid #00cccc;
+  }
+
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: #006666;
+    font-weight: 700;
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    color: #004d4d;
+  }
+
+  .back-btn {
+    margin: 3rem auto;
+    display: inline-block;
+    background: linear-gradient(45deg, #00cccc, #008080, #00cccc);
+    background-size: 200% 200%;
+    animation: gradientMove 3s ease infinite;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 15px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .back-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .card-grid { gap: 1rem; }
+    .card { width: 200px; padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating Tamil letters -->
+<span class="floating-letter" style="top:10%; left:5%;">அ</span>
+<span class="floating-letter" style="top:70%; left:20%;">க</span>
+<span class="floating-letter" style="top:40%; left:80%;">ம</span>
+<span class="floating-letter" style="top:20%; left:60%;">ப</span>
+<span class="floating-letter" style="top:80%; left:40%;">ர</span>
+
+<iframe src="player.html" style="position:fixed; top:0; right:0; width:80px; height:80px; border:none; background:transparent; z-index:9999;" scrolling="no"></iframe>
+
+<h1>🪷 Learn Tamil</h1>
+<p>Select a section to start your fun learning journey!</p>
+
+<div class="card-grid">
+  <a href="tamil-alphabets.html" class="card">
+    <h2>🔤 Tamil Alphabets</h2>
+    <p>Start with letters and pronunciation.</p>
+  </a>
+  <a href="survival-words.html" class="card">
+    <h2>🧳 Survival Words</h2>
+    <p>Learn words useful in daily life and travel.</p>
+  </a>
+  <a href="colours.html" class="card">
+    <h2>🎨 Tamil Colors</h2>
+    <p>Recognize and pronounce colors in Tamil.</p>
+  </a>
+  <a href="numbers.html" class="card">
+    <h2>🔢 Learn Numbers</h2>
+    <p>Learn numbers and pronunciation.</p>
+  </a>
+  <a href="proverbs.html" class="card">
+    <h2>📖 Learn Proverbs</h2>
+    <p>Explore Tamil proverbs with meaning.</p>
+  </a>
+  <a href="weeks.html" class="card">
+    <h2>🗓️ Learn Weeks & Months</h2>
+    <p>Discover with English meanings.</p>
+  </a>
+</div>
+
+<a href="index.html" class="back-btn">🏠 Back to Home</a>
+
+</body>
+</html>

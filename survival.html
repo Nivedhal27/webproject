@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamil Word Maze</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #1e1e2f;
+    color: white;
+    text-align: center;
+  }
+
+  h1 { margin-bottom: 20px; color: #ffd700; text-shadow: 2px 2px 5px black; }
+
+  .maze {
+    display: grid;
+    grid-template-columns: repeat(3, 150px);
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .door {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    text-shadow: 1px 1px 3px black;
+    transition: 0.3s;
+  }
+
+  .door:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.05);
+  }
+
+  #status {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+
+  #next-level {
+    padding: 10px 20px;
+    background: #ff5722;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    display: none;
+  }
+
+  #next-level:hover { background: #e64a19; }
+
+  /* Mini maze background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, #444 20px, #444 21px),
+                      repeating-linear-gradient(90deg, transparent, transparent 20px, #444 20px, #444 21px);
+    opacity: 0.2;
+    z-index: -1;
+  }
+
+</style>
+</head>
+<body>
+    
+
+<h1>Tamil Word Maze</h1>
+<div class="maze" id="maze"></div>
+<div id="status"></div>
+<button id="next-level" onclick="nextLevel()">Next Level</button>
+
+<script>
+// Tamil words for 15 levels
+const levels = [
+  [{ tamil: "நாய்", english: "Dog" }, { tamil: "பூனை", english: "Cat" }, { tamil: "மாம்பழம்", english: "Mango" }],
+  [{ tamil: "வீடு", english: "House" }, { tamil: "நண்பர்", english: "Friend" }, { tamil: "தண்ணீர்", english: "Water" }],
+  [{ tamil: "வானம்", english: "Sky" }, { tamil: "சூரியன்", english: "Sun" }, { tamil: "மழை", english: "Rain" }],
+  [{ tamil: "பரிசு", english: "Gift" }, { tamil: "படை", english: "Army" }, { tamil: "மரம்", english: "Tree" }],
+  [{ tamil: "பலகை", english: "Bench" }, { tamil: "பொது", english: "Public" }, { tamil: "முகம்", english: "Face" }],
+  [{ tamil: "அம்மா", english: "Mother" }, { tamil: "தந்தை", english: "Father" }, { tamil: "அண்ணா", english: "Brother" }],
+  [{ tamil: "தங்கை", english: "Sister" }, { tamil: "பள்ளி", english: "School" }, { tamil: "நேரம்", english: "Time" }],
+  [{ tamil: "கிரகம்", english: "Planet" }, { tamil: "நட்சத்திரம்", english: "Star" }, { tamil: "சந்திரன்", english: "Moon" }],
+  [{ tamil: "ஆப்பிள்", english: "Apple" }, { tamil: "வாழை", english: "Banana" }, { tamil: "திரை", english: "Screen" }],
+  [{ tamil: "பள்ளியாச்சி", english: "Teacher" }, { tamil: "மாணவர்", english: "Student" }, { tamil: "நூல்", english: "Book" }],
+  [{ tamil: "கார்", english: "Car" }, { tamil: "பஸ்ஸ்", english: "Bus" }, { tamil: "ரெயில்", english: "Train" }],
+  [{ tamil: "கடல்", english: "Sea" }, { tamil: "நதி", english: "River" }, { tamil: "மலை", english: "Mountain" }],
+  [{ tamil: "உறவு", english: "Relationship" }, { tamil: "சந்தோஷம்", english: "Happiness" }, { tamil: "விருப்பு", english: "Preference" }],
+  [{ tamil: "பாடல்", english: "Song" }, { tamil: "நடை", english: "Walk" }, { tamil: "பேசு", english: "Speak" }],
+  [{ tamil: "கண்டல்", english: "Vision" }, { tamil: "முகவரி", english: "Address" }, { tamil: "சாலை", english: "Road" }]
+];
+
+const encouraging = [
+  "Great job! Keep going! 🌟",
+  "Awesome! You're doing amazing! 💪",
+  "Fantastic! Keep learning! 🎉",
+  "Excellent! Keep it up! ✨",
+  "You're a Tamil star! ⭐"
+];
+
+let currentLevel = 0;
+let correctDoor = 0;
+
+function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+function loadLevel(level) {
+  const mazeDiv = document.getElementById('maze');
+  mazeDiv.innerHTML = '';
+  document.getElementById('status').innerText = '';
+
+  const options = shuffle(level);
+  correctDoor = Math.floor(Math.random() * options.length);
+  
+  options.forEach((option, index) => {
+    const door = document.createElement('div');
+    door.className = 'door';
+    door.innerText = option.tamil;
+    door.onclick = () => checkDoor(index, option.english);
+    mazeDiv.appendChild(door);
+  });
+
+  document.getElementById('status').innerText = `Choose the correct English meaning for: ${options[correctDoor].english}`;
+  document.getElementById('next-level').style.display = 'none';
+}
+
+function checkDoor(index, english) {
+  if(index === correctDoor) {
+    const msg = encouraging[Math.floor(Math.random() * encouraging.length)];
+    document.getElementById('status').innerText = `✅ Correct! It was ${english}. ${msg}`;
+    document.getElementById('next-level').style.display = 'block';
+  } else {
+    document.getElementById('status').innerText = `❌ Wrong! Try again.`;
+  }
+}
+
+function nextLevel() {
+  currentLevel++;
+  if(currentLevel >= levels.length) {
+    document.getElementById('maze').innerHTML = '';
+    document.getElementById('status').innerText = "🎉 Congratulations! You completed all 15 levels! Keep shining! 🌟";
+    document.getElementById('next-level').style.display = 'none';
+  } else {
+    loadLevel(levels[currentLevel]);
+  }
+}
+
+// Start game
+loadLevel(levels[currentLevel]);
+</script>
+
+</body>
+</html>

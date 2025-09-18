@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LingoRoots - Sign Up</title>
+  <style>
+    body { 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, hsl(346, 100%, 63%), #ff4b2b);
+      font-family: "Poppins", sans-serif;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 { text-align: center; margin-bottom: 20px; color: #333; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { font-size: 14px; display: block; margin-bottom: 5px; }
+    .form-group input {
+      width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px;
+    }
+    .btn {
+      width: 100%; padding: 12px; background: #ff4b2b; border: none;
+      border-radius: 8px; color: #fff; font-size: 16px; cursor: pointer;
+    }
+    .btn:hover { background: #e13c1e; }
+    p { text-align: center; margin-top: 15px; font-size: 14px; }
+    a { color: #ff4b2b; text-decoration: none; }
+    .error { color: red; text-align: center; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Sign Up</h2>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="Enter email" required>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter password" required>
+    </div>
+    <button class="btn" onclick="signup()">Sign Up</button>
+    <p id="error" class="error"></p>
+    <p>Already have an account? <a href="login.html">Login here</a></p>
+  </div>
+
+  <script>
+    function signup() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const error = document.getElementById("error");
+
+      if (!email || !password) {
+        error.textContent = "Please fill in all fields.";
+        return;
+      }
+
+      // Save user to localStorage (temporary demo)
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userPassword", password);
+
+      alert("Signup successful! Please login now.");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

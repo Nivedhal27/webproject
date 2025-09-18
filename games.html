@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Games - TamilQuest</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2em;
+    margin: 40px 0 20px;
+    text-shadow: 2px 2px 5px #000;
+    animation: glow 2s infinite alternate;
+  }
+
+  @keyframes glow {
+    from { text-shadow: 2px 2px 5px #000, 0 0 10px #ffeb3b; }
+    to { text-shadow: 2px 2px 5px #000, 0 0 20px #ffeb3b; }
+  }
+
+  .quote {
+    font-style: italic;
+    margin-bottom: 40px;
+    font-size: 1.2em;
+    color: #ffd700;
+    animation: fadeIn 3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .game-card {
+    background: rgba(0,0,0,0.4);
+    padding: 30px;
+    border-radius: 15px;
+    width: 300px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+  }
+
+  .game-card h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #ffeb3b;
+  }
+
+  .game-card p {
+    margin-bottom: 20px;
+    font-size: 0.95em;
+    line-height: 1.4;
+  }
+
+  .play-btn {
+    display: block;
+    margin: 15px 0;
+    padding: 12px 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.85em;
+    background: #ff5722;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  }
+
+  .play-btn:hover {
+    background: #ff9800;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #fff;
+  }
+
+</style>
+</head>
+<body>
+
+<h1>🎮 Fun Tamil Games</h1>
+<div class="quote" id="quote"></div>
+
+<div class="game-card">
+  <h2>🕵️ Choose the Game !!!!</h2>
+  <p>Guess Tamil words, improve your vocabulary, and have fun while learning!</p>
+  <a href="hangman.html" class="play-btn">▶ Play cookie game </a>
+  <a href="survival.html" class="play-btn">▶ play match !</a>
+  <a href="maze.html" class="play-btn">▶ play scramble !</a>
+
+</div>
+
+<script>
+  const quotes = [
+    "Keep going! Every word you learn is a step forward! 🌟",
+    "You're doing amazing! Knowledge is power! 💪",
+    "Learning Tamil is a journey, enjoy every step! ✨",
+    "Great job! Small victories lead to big achievements! 🎉",
+    "Believe in yourself, and the words will follow! 📝"
+  ];
+
+  function showQuote() {
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById('quote').innerText = randomQuote;
+  }
+
+  showQuote();
+  // Change quote every 10 seconds
+  setInterval(showQuote, 10000);
+</script>
+
+</body>
+</html>

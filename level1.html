@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Level 1 - Tamil Quiz</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to right, #fc5c7d, #6a82fb);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: white;
+    }
+
+    .container {
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .question-box {
+      background: white;
+      color: #6a82fb;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .option-btn {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #6a82fb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option-btn:hover {
+      background: #4b5fc1;
+    }
+
+    .score-board {
+      margin-top: 30px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="quiz-container">
+    <h1>📝 Tamil Beginner Quiz - Level 1</h1>
+    <div class="question-box" id="quiz-box">
+      <!-- Question and options will load here -->
+    </div>
+    <div class="score-board" id="score">Score: 0 / 10</div>
+  </div>
+
+  <script>
+  const quizData = [
+    { tamil: "அம்மா", pronounce: "amma", options: ["Mother", "Father", "Sister", "Friend"], answer: "Mother" },
+    { tamil: "நாய்", pronounce: "naai", options: ["Cat", "Elephant", "Dog", "Bird"], answer: "Dog" },
+    { tamil: "நன்றி", pronounce: "nandri", options: ["Sorry", "Thank You", "Welcome", "Please"], answer: "Thank You" },
+    { tamil: "கை", pronounce: "kai", options: ["Leg", "Hand", "Eye", "Head"], answer: "Hand" },
+    { tamil: "பூ", pronounce: "poo", options: ["Tree", "Fruit", "Flower", "Leaf"], answer: "Flower" },
+    { tamil: "பசு", pronounce: "pasu", options: ["Goat", "Cow", "Pig", "Horse"], answer: "Cow" },
+    { tamil: "வெண்ணிலை", pronounce: "vennilai", options: ["Sun", "Star", "Moon", "Sky"], answer: "Moon" },
+    { tamil: "நீரு", pronounce: "neeru", options: ["Milk", "Juice", "Water", "Oil"], answer: "Water" },
+    { tamil: "மரம்", pronounce: "maram", options: ["Flower", "Fruit", "Tree", "Leaf"], answer: "Tree" },
+    { tamil: "பாலம்", pronounce: "paalam", options: ["Bridge", "Road", "Rail", "Tunnel"], answer: "Bridge" },
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  const quizBox = document.getElementById('quiz-box');
+  const scoreBoard = document.getElementById('score');
+  const container = document.getElementById('quiz-container');
+
+  const username = localStorage.getItem("tq_username") || "player1";
+  const levelName = "level1";
+
+  function loadQuestion() {
+    const q = quizData[currentQuestion];
+    quizBox.innerHTML = `
+      <h2>${q.tamil}</h2>
+      <p><em>Pronunciation: ${q.pronounce}</em></p>
+      <div class="options">
+        ${q.options.map(opt => `<button class="option-btn" onclick="selectAnswer('${opt}')">${opt}</button>`).join('')}
+      </div>
+    `;
+  }
+
+  function selectAnswer(selected) {
+    const correct = quizData[currentQuestion].answer;
+    if (selected === correct) score++;
+    currentQuestion++;
+
+    if (currentQuestion < quizData.length) {
+      loadQuestion();
+    } else {
+      showResult();
+    }
+    scoreBoard.textContent = `Score: ${score} / ${quizData.length}`;
+  }
+
+  function showResult() {
+    container.innerHTML = `
+      <h2>🎉 Quiz Completed!</h2>
+      <p>Your Final Score: ${score} / ${quizData.length}</p>
+      <p>Redirecting you back to levels...</p>
+    `;
+
+    // save score
+    fetch("http://localhost:3000/save-score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, level: levelName, score })
+    })
+      .then(r => r.json())
+      .then(d => console.log("Saved:", d))
+      .catch(e => console.error("Save failed:", e))
+      .finally(() => {
+        setTimeout(() => {
+  if (score >= 7) {   // Example: pass mark is 7/10
+    window.location.href = "level2.html";
+  } else {
+    window.location.href = "levels.html";
+  }
+}, 2000);
+
+      });
+  }
+
+  function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    scoreBoard.textContent = `Score: ${score} / ${quizData.length}`;
+    loadQuestion();
+  }
+
+  loadQuestion();
+  </script>
+
+</body>
+</html>
+

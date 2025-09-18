@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scramble Quest - Arcade</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(120deg, #1f1c2c, #928dab);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+  }
+
+  h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 10px #000;
+    animation: glow 2s infinite alternate;
+  }
+
+  @keyframes glow {
+    from { text-shadow: 2px 2px 5px #000, 0 0 10px #ffd700; }
+    to { text-shadow: 2px 2px 5px #000, 0 0 20px #ffd700; }
+  }
+
+  #game-container {
+    background: rgba(0,0,0,0.5);
+    padding: 30px;
+    border-radius: 15px;
+    width: 350px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    position: relative;
+  }
+
+  #scrambled {
+    font-size: 2em;
+    margin-bottom: 20px;
+    letter-spacing: 5px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .letter-btn {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 15px;
+    background: #ff5722;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;
+    transition: all 0.2s;
+    animation: float 3s ease-in-out infinite alternate;
+  }
+
+  .letter-btn:hover { transform: scale(1.2); background: #ff9800; }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-5px); }
+  }
+
+  #answer { margin-top: 20px; font-size: 1.2em; min-height: 25px; }
+
+  #status { margin-top: 15px; font-size: 1em; color: #ffd700; }
+
+  #next-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #4caf50;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    display: none;
+    font-size: 0.9em;
+  }
+
+  #next-btn:hover { background: #388e3c; }
+
+  #scoreboard {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.9em;
+    color: #ffd700;
+  }
+
+  #timer {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.9em;
+    color: #ff5722;
+  }
+
+</style>
+</head>
+<body>
+
+<h1>Scramble Quest</h1>
+<div id="scoreboard">Score: 0</div>
+<div id="timer">Time: 20</div>
+
+<div id="game-container">
+  <div id="scrambled">Loading...</div>
+  <div id="letters"></div>
+  <div id="answer"></div>
+  <div id="status"></div>
+  <button id="next-btn" onclick="nextWord()">Next Word</button>
+</div>
+
+<script>
+const words = [
+  { tamil: "நாய்", english: "Dog" },
+  { tamil: "பூனை", english: "Cat" },
+  { tamil: "மாம்பழம்", english: "Mango" },
+  { tamil: "வீடு", english: "House" },
+  { tamil: "நண்பர்", english: "Friend" },
+  { tamil: "தண்ணீர்", english: "Water" },
+  { tamil: "சூரியன்", english: "Sun" },
+  { tamil: "மழை", english: "Rain" },
+  { tamil: "பரிசு", english: "Gift" },
+  { tamil: "மரம்", english: "Tree" }
+];
+
+const encouraging = [
+  "Awesome! 🌟 Keep going!",
+  "Great job! 💪",
+  "You’re unstoppable! ✨",
+  "Fantastic! 🎉",
+  "Brilliant! 🏆"
+];
+
+let currentWord = {};
+let selected = [];
+let score = 0;
+let timer = 20;
+let timerInterval;
+
+function shuffleArray(array) {
+  for(let i = array.length -1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function loadWord() {
+  clearInterval(timerInterval);
+  timer = 20; // reset timer
+  document.getElementById('timer').innerText = `Time: ${timer}`;
+  timerInterval = setInterval(() => {
+    timer--;
+    document.getElementById('timer').innerText = `Time: ${timer}`;
+    if(timer <= 0) {
+      clearInterval(timerInterval);
+      document.getElementById('status').innerText = `⏰ Time's up! The word was: ${currentWord.tamil}`;
+      document.getElementById('next-btn').style.display = 'block';
+      document.getElementById('letters').innerHTML = '';
+    }
+  }, 1000);
+
+  selected = [];
+  document.getElementById('answer').innerText = '';
+  document.getElementById('status').innerText = '';
+  document.getElementById('next-btn').style.display = 'none';
+  
+  currentWord = words[Math.floor(Math.random()*words.length)];
+  const letters = shuffleArray(currentWord.tamil.split(''));
+  
+  document.getElementById('scrambled').innerText = letters.join(' ');
+  
+  const lettersDiv = document.getElementById('letters');
+  lettersDiv.innerHTML = '';
+  
+  letters.forEach(letter => {
+    const btn = document.createElement('span');
+    btn.className = 'letter-btn';
+    btn.innerText = letter;
+    btn.onclick = () => selectLetter(btn, letter);
+    lettersDiv.appendChild(btn);
+  });
+}
+
+function selectLetter(btn, letter) {
+  selected.push(letter);
+  document.getElementById('answer').innerText = selected.join('');
+  btn.style.visibility = 'hidden';
+  checkAnswer();
+}
+
+function checkAnswer() {
+  if(selected.join('') === currentWord.tamil) {
+    clearInterval(timerInterval);
+    const points = timer * 10; // faster = more points
+    score += points;
+    document.getElementById('scoreboard').innerText = `Score: ${score}`;
+    const msg = encouraging[Math.floor(Math.random()*encouraging.length)];
+    document.getElementById('status').innerText = `✅ Correct! +${points} points! ${msg}`;
+    document.getElementById('next-btn').style.display = 'block';
+    document.getElementById('letters').innerHTML = '';
+  }
+}
+
+function nextWord() {
+  loadWord();
+}
+
+// Start the game
+loadWord();
+</script>
+
+</body>
+</html>

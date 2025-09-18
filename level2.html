@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Level 2 - Tamil Quiz</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to right, #36d1dc, #5b86e5);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: white;
+    }
+    .container { padding: 30px; }
+    .question-box {
+      background: white;
+      color: #5b86e5;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .option-btn {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #5b86e5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    .option-btn:hover { background: #3c5ab2; }
+    .score-board { margin-top: 30px; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Tamil Beginner Quiz - Level 2</h1>
+    <div class="question-box" id="quiz-box"></div>
+    <div class="score-board" id="score">Score: 0 / 10</div>
+  </div>
+
+  <script>
+    const quizData = [
+      { tamil: "குடம்", pronounce: "kudam", options: ["Pot", "Chair", "House", "Table"], answer: "Pot" },
+      { tamil: "சூரியன்", pronounce: "sooriyan", options: ["Sun", "Star", "Moon", "Sky"], answer: "Sun" },
+      { tamil: "மீன்", pronounce: "meen", options: ["Fish", "Dog", "Goat", "Bird"], answer: "Fish" },
+      { tamil: "விழா", pronounce: "vizha", options: ["Festival", "School", "Work", "Temple"], answer: "Festival" },
+      { tamil: "அரிசி", pronounce: "arisi", options: ["Rice", "Milk", "Bread", "Sugar"], answer: "Rice" },
+      { tamil: "கண்", pronounce: "kan", options: ["Eye", "Hand", "Ear", "Leg"], answer: "Eye" },
+      { tamil: "மழை", pronounce: "mazhai", options: ["Rain", "Snow", "Fog", "Storm"], answer: "Rain" },
+      { tamil: "வீடு", pronounce: "veedu", options: ["House", "Road", "Bridge", "Garden"], answer: "House" },
+      { tamil: "பனி", pronounce: "pani", options: ["Snow", "Fire", "Water", "Air"], answer: "Snow" },
+      { tamil: "கடல்", pronounce: "kadal", options: ["Sea", "Lake", "River", "Well"], answer: "Sea" }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const quizBox = document.getElementById('quiz-box');
+    const scoreBoard = document.getElementById('score');
+
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      quizBox.innerHTML = `
+        <h2>${q.tamil}</h2>
+        <p><em>Pronunciation: ${q.pronounce}</em></p>
+        <div>
+          ${q.options.map(opt => `<button class="option-btn" onclick="selectAnswer('${opt}')">${opt}</button>`).join('')}
+        </div>
+      `;
+    }
+
+    function selectAnswer(selected) {
+      const correct = quizData[currentQuestion].answer;
+      if (selected === correct) score++;
+      currentQuestion++;
+
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+      scoreBoard.textContent = `Score: ${score} / ${quizData.length}`;
+    }
+
+    function showResult() {
+      quizBox.innerHTML = `
+        <h2>🎉 Level 2 Completed!</h2>
+        <p>Your Final Score: ${score} / ${quizData.length}</p>
+        <p>Redirecting to levels...</p>
+      `;
+      setTimeout(() => {
+        window.location.href = "levels.html"; // back to menu or go to Level 3
+      }, 2000);
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>

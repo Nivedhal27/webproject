@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Tamil Months & Days</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f8cdda, #1d2b64);
+      margin: 0;
+      padding: 20px;
+      color: #fff;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin: 20px 0;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .flashcard {
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 140px;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .flashcard.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      padding: 10px;
+    }
+
+    .card-front {
+      background: #ff758c;
+    }
+
+    .card-back {
+      background: #4facfe;
+      transform: rotateY(180deg);
+      flex-direction: column;
+      font-size: 1rem;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <h1>📅 Tamil Months</h1>
+  <div class="grid" id="months">
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">சித்திரை</div><div class="card-back">Chithirai <br>(Apr – May)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">வைகாசி</div><div class="card-back">Vaikasi <br>(May – Jun)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">ஆனி</div><div class="card-back">Aani <br>(Jun – Jul)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">ஆடி</div><div class="card-back">Aadi <br>(Jul – Aug)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">ஆவணி</div><div class="card-back">Aavani <br>(Aug – Sep)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">புரட்டாசி</div><div class="card-back">Purattasi <br>(Sep – Oct)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">ஐப்பசி</div><div class="card-back">Aippasi <br>(Oct – Nov)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">கார்த்திகை</div><div class="card-back">Karthigai <br>(Nov – Dec)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">மார்கழி</div><div class="card-back">Margazhi <br>(Dec – Jan)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">தை</div><div class="card-back">Thai <br>(Jan – Feb)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">மாசி</div><div class="card-back">Maasi <br>(Feb – Mar)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">பங்குனி</div><div class="card-back">Panguni <br>(Mar – Apr)</div></div></div>
+  </div>
+
+  <h1>🗓️ Tamil Weekdays</h1>
+  <div class="grid" id="days">
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">ஞாயிறு</div><div class="card-back">Sunday <br>(Nyayiru)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">திங்கள்</div><div class="card-back">Monday <br>(Thingal)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">செவ்வாய்</div><div class="card-back">Tuesday <br>(Sevvai)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">புதன்</div><div class="card-back">Wednesday <br>(Budhan)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">வியாழன்</div><div class="card-back">Thursday <br>(Viyazhan)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">வெள்ளி</div><div class="card-back">Friday <br>(Velli)</div></div></div>
+    <div class="flashcard" onclick="flipCard(this)"><div class="card-inner"><div class="card-front">சனி</div><div class="card-back">Saturday <br>(Sani)</div></div></div>
+  </div>
+
+  <canvas id="confetti"></canvas>
+  <audio id="clap" src="applause.mp3" preload="auto"></audio>
+
+  <script>
+    let totalCards = document.querySelectorAll('.flashcard').length;
+    let flippedCount = 0;
+    let celebrationDone = false;
+
+    function flipCard(card) {
+      if (!card.classList.contains("flipped")) {
+        flippedCount++;
+      }
+      card.classList.toggle("flipped");
+
+      if (flippedCount === totalCards && !celebrationDone) {
+        celebrationDone = true;
+        celebrate();
+      }
+    }
+
+    function celebrate() {
+      document.getElementById("clap").play();
+      startConfetti();
+      setTimeout(stopConfetti, 5000);
+    }
+
+    // Confetti effect
+    const confettiCanvas = document.getElementById("confetti");
+    const ctx = confettiCanvas.getContext("2d");
+    let confettiPieces = [];
+
+    function resizeCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function randomColor() {
+      const colors = ["#f94144","#f3722c","#f8961e","#43aa8b","#577590","#9b5de5","#f15bb5"];
+      return colors[Math.floor(Math.random()*colors.length)];
+    }
+
+    function createConfetti() {
+      return {
+        x: Math.random() * confettiCanvas.width,
+        y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 0.5 + 0.5,
+        color: randomColor()
+      };
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      confettiPieces.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+      updateConfetti();
+    }
+
+    function updateConfetti() {
+      confettiPieces.forEach(p => {
+        p.y += p.d;
+        if (p.y > confettiCanvas.height) {
+          p.x = Math.random() * confettiCanvas.width;
+          p.y = -10;
+        }
+      });
+    }
+
+    let confettiInterval;
+    function startConfetti() {
+      confettiPieces = Array.from({length: 200}, createConfetti);
+      confettiInterval = setInterval(drawConfetti, 20);
+    }
+
+    function stopConfetti() {
+      clearInterval(confettiInterval);
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+    }
+  </script>
+</body>
+</html>

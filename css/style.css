@@ -1,0 +1,78 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to right, #fc5c7d, #6a82fb);
+  margin: 0;
+  color: white;
+  text-align: center;
+}
+
+.container {
+  padding: 50px 20px;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.btn {
+  padding: 10px 25px;
+  font-size: 1rem;
+  background: #ffffff;
+  color: #6a82fb;
+  text-decoration: none;
+  border-radius: 25px;
+  transition: 0.3s ease;
+}
+
+.btn:hover {
+  background: #eee;
+}
+
+.levels-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.level-card {
+  background: white;
+  color: #6a82fb;
+  padding: 20px 30px;
+  border-radius: 15px;
+  text-decoration: none;
+  font-weight: bold;
+  width: 120px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.3s;
+}
+
+.level-card:hover {
+  transform: scale(1.05);
+}
+
+.locked {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.drag-item, .drop-zone {
+  margin: 20px auto;
+  padding: 15px;
+  background: white;
+  color: #6a82fb;
+  width: 200px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: grab;
+}
+
+.drop-zone {
+  border: 2px dashed #fff;
+}

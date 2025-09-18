@@ -1,0 +1,111 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Baloo 2', cursive;
+  background: linear-gradient(120deg, #ffecd2, #fcb69f);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin: 2rem 1rem;
+}
+
+header h1 {
+  font-family: 'Fredoka One', cursive; /* Only the page title */
+  font-size: 3rem;
+  color: #ff4d6d;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+}
+
+
+header p {
+  font-size: 1.2rem;
+  color: #444;
+  margin-top: 0.3rem;
+}
+
+/* Cards Container */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  width: 95%;
+  padding-bottom: 3rem;
+}
+
+/* Individual Card */
+.card {
+  background: #fff;
+  border-radius: 30px;
+  width: 280px;
+  padding: 1.8rem;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Bubble effect */
+.bubble {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: #ff9a9e;
+  border-radius: 50%;
+  top: -40px;
+  right: -40px;
+  opacity: 0.3;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg);}
+  50% { transform: translateY(-20px) rotate(20deg);}
+}
+
+/* Card hover */
+.card:hover {
+  transform: translateY(-10px) rotate(-1deg);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* Card text */
+.card h2 {
+  font-family: 'Kalam', cursive;
+  font-size: 1.4rem;
+  color: #ff4d6d;
+  margin-bottom: 0.5rem;
+}
+
+.card .pronunciation {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.card .meaning {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.95rem;
+  color: #666;
+}
